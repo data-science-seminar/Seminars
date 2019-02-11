@@ -15,3 +15,4 @@
 5. Install	the	following	packages:	dplyr, plyr, tidyr, RColorBrewer, shiny
 
 ## Anaconda and  jupyter notebooks
+Follow anaconda installation [guide](https://docs.anaconda.com/anaconda/install/windows/ "Title")
