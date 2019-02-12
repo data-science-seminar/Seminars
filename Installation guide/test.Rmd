@@ -1,0 +1,43 @@
+---
+title: "Introduction-excercise"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction excercise
+
+The objective of this excercise is to be familiar with data sourcing and basic data manipulation for both R and python. After this excercise you should be able to load files, create data frames and understand basic data transformation. If you are already familiar with data manipulation you might be able to skip this excercise.õ
+
+
+### Packages & libraries
+
+In R Packages are the fundamental units of reproducible code. They include reusable R functions, the documentation that describes how to use them, and sample data. Packages enhance R by improving existing base R functionalities, or by adding new ones. There are general packages like dplyr and data.table that help with data cleaning and wrangling to more advatages pages such as "NLP", that allow text processing for several languges
+
+
+```{r (echo=FALSE)}
+# install.packages("data.table")
+# install.packages("dplyr")
+# install.package("NLP")
+
+library(data.table)
+library(dplyr)
+library(NLP)
+
+```
+
+In python packages can be installed wiht pip or using Anaconda in the command prompt
+
+```{python (echo=False)}
+#pip install scipy
+#conda install scipy
+
+from numpy as np
+```
+### Data sourcing
+
+### Basic data manipulation
+
+
