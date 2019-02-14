@@ -22,17 +22,17 @@ In R Packages are the fundamental units of reproducible code. They include reusa
 # install.packages("dplyr")
 # install.package("NLP")
 
-library(data.table)
-library(dplyr)
-library(NLP)
-library(reticulate)
+require(data.table)
+require(dplyr)
+require(NLP)
+require(reticulate)
 #knitr::knit_engines$set(python = reticulate::use_python('C:/tools/anaconda3/5.3.0'))
 
 ```
 
 In python packages can be installed wiht pip or using Anaconda in the command prompt
 
-```{python}
+```{python eval=FALSE}
 #pip install numpy
 #conda inöstall numpy
 
@@ -69,14 +69,20 @@ If you want to read files from other directories without having to open a file c
 require(data.table) # general purpose package for data manipulation
 require(readxl) # package to read data from excel files
 
-#csvdata<-read.table('sample.csv',header = FALSE,sep = ',')
-#exceldata<-read_excel("my_file.xls")
+txtdata<-read.table('biostats.txt',header = TRUE,sep = ',')
+exceldata<-read_excel("biostats.xlsx")
+csvdata<-read.table('biostats.csv',header = TRUE,sep = ',')
+
+summary(csvdata)
 
 ```
 In this case the data is on the work directory, but if you want to use data from other directories this can be done by specifying the file path as the first argument of the function
 e.g. 
 ```{r eval=FALSE}
 data<-read.table('C:/USER/DATA/table.csv',header=FALSE,sep = ',')
+```
+```{r}
+
 ```
 
 In a similar manner you can export data from R to a file
@@ -91,48 +97,61 @@ write.table(csvdata, 'example2.txt', append = FALSE, sep = " ", dec = ".",row.na
 
 once you have access to your data, then the real work can start. in this brief excercises we will get an overview on how to use R to manipulate data in a manner that is not possible in excel.
 
-```{r eval=FALSE}
+First let's load some data and let's print the first rows
+
+```{r eval=TRUE}
 require(tidyr)
 
 my_data <- as.data.frame(iris)
-my_data
+
+head(my_data)
+
+```
+Now lets's reorganize the data according to one variable and look at the table
+```{r }
 
 # Rearrange data
-my_data %>% arrange(Sepal.Length)
-my_data %>% arrange(desc(Sepal.Length))
+my_data2<-my_data %>% arrange(Sepal.Length)
+head(my_data2)
+```
+Now let's try to other types basic manipulation like change the functions
 
-
-# Rename  some columns
-my_data %>% 
-  rename(
-    sepal_length = Sepal.Length,
-    sepal_width = Sepal.Width
-    )
-
-
-# Get the column names of data frame
-
-colnames(my_data)
+```{r eval=TRUE}
 
 
 # change column values
 
-my_data2 %>%
-  mutate_all(funs(./2.54))
+my_data2<-my_data %>% mutate_all(funs(./2.54))
+head(my_data2)
+
+```
+As you can see we try to divide a non valid data type like 'text' we obtain 'NA', to avoid this we can select or add new columns
+
+```{r}
 
 # Transform variables
 
-cherry1 <- transform(cherry, logVolume=log(Volume), logGirth=log(Girth))
+my_data2 <- transform(my_data, logLength=log(Sepal.Length), logWidth=log(Sepal.Width))
+
+head(my_data2)
+
+```
+
+To close up let's do basic data merge
+
+```{r}
 
 
-# merge datasets
 
 # add new data
-allData <- rbind(cherry, newData)
+allData <- rbind(csvdata, txtdata)
 
 # add new variables
 
-allData2 <- cbind(cherry, precipitation)
+allData2 <- cbind(my_data[1:18,], exceldata)
 
+head(allData)
+
+head(allData2)
 ```
 
