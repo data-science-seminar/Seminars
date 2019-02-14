@@ -9,7 +9,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Introduction excercise
 
-The objective of this excercise is to be familiar with data sourcing and basic data manipulation for both R and python. After this excercise you should be able to load files, create data frames and understand basic data transformation. If you are already familiar with data manipulation you might be able to skip this excercise.�
+The objective of this excercise is to be familiar with data sourcing and basic data manipulation for both R and python. After this excercise you should be able to load files, create data frames and understand basic data transformation. If you are already familiar with data manipulation you might be able to skip this excercise.õ
 
 
 ### Packages & libraries
@@ -17,7 +17,7 @@ The objective of this excercise is to be familiar with data sourcing and basic d
 In R Packages are the fundamental units of reproducible code. They include reusable R functions, the documentation that describes how to use them, and sample data. Packages enhance R by improving existing base R functionalities, or by adding new ones. There are general packages like dplyr and data.table that help with data cleaning and wrangling to more advatages pages such as "NLP", that allow text processing for several languges
 
 
-```{r (echo=FALSE)}
+```{r  message = FALSE, eval=TRUE}
 # install.packages("data.table")
 # install.packages("dplyr")
 # install.package("NLP")
@@ -25,19 +25,114 @@ In R Packages are the fundamental units of reproducible code. They include reusa
 library(data.table)
 library(dplyr)
 library(NLP)
+library(reticulate)
+#knitr::knit_engines$set(python = reticulate::use_python('C:/tools/anaconda3/5.3.0'))
 
 ```
 
 In python packages can be installed wiht pip or using Anaconda in the command prompt
 
-```{python (echo=False)}
-#pip install scipy
-#conda install scipy
+```{python}
+#pip install numpy
+#conda inöstall numpy
 
-from numpy as np
+import pandas as pd
+import sys
+print(print(sys.version))
+
+
 ```
 ### Data sourcing
 
+The most importan part of a data scientist job is the data. Logically, this means that the first step into learning about data science is not on statistics on comple mathematics but understanding how obtain data from different sources.
+This excercises will help you to load data into your prefered work enviroment.
+
+#### Reading from files
+
+```{r eval=FALSE}
+require(data.table) # general purpose package for data manipulation
+require(readxl) # package to read data from excel files
+
+# If you want to choose the file from a gui you can use
+guidata <- read_excel(file.choose())
+
+# if you want to read data from a copied excel table on clipboard
+clipboarddata <- read.table(file = "clipboard", sep = "\t", header=TRUE)
+
+
+```
+
+
+If you want to read files from other directories without having to open a file choosing GUI
+```{r}
+
+require(data.table) # general purpose package for data manipulation
+require(readxl) # package to read data from excel files
+
+#csvdata<-read.table('sample.csv',header = FALSE,sep = ',')
+#exceldata<-read_excel("my_file.xls")
+
+```
+In this case the data is on the work directory, but if you want to use data from other directories this can be done by specifying the file path as the first argument of the function
+e.g. 
+```{r eval=FALSE}
+data<-read.table('C:/USER/DATA/table.csv',header=FALSE,sep = ',')
+```
+
+In a similar manner you can export data from R to a file
+```{r eval=FALSE}
+require(data.table)
+
+write.table(csvdata, 'example2.txt', append = FALSE, sep = " ", dec = ".",row.names = TRUE, col.names = TRUE)
+```
+
+
 ### Basic data manipulation
 
+once you have access to your data, then the real work can start. in this brief excercises we will get an overview on how to use R to manipulate data in a manner that is not possible in excel.
+
+```{r eval=FALSE}
+require(tidyr)
+
+my_data <- as.data.frame(iris)
+my_data
+
+# Rearrange data
+my_data %>% arrange(Sepal.Length)
+my_data %>% arrange(desc(Sepal.Length))
+
+
+# Rename  some columns
+my_data %>% 
+  rename(
+    sepal_length = Sepal.Length,
+    sepal_width = Sepal.Width
+    )
+
+
+# Get the column names of data frame
+
+colnames(my_data)
+
+
+# change column values
+
+my_data2 %>%
+  mutate_all(funs(./2.54))
+
+# Transform variables
+
+cherry1 <- transform(cherry, logVolume=log(Volume), logGirth=log(Girth))
+
+
+# merge datasets
+
+# add new data
+allData <- rbind(cherry, newData)
+
+# add new variables
+
+allData2 <- cbind(cherry, precipitation)
+
+```
 
