@@ -18,4 +18,6 @@
 Follow anaconda installation [guide](https://docs.anaconda.com/anaconda/install/windows/ "Title")
 
 
-## The introduction excercise can be found [here], (http://htmlpreview.github.io/?https://github.com/data-science-seminar/Seminars/blob/master/Installation%20guide/R/Introduction-excercise.html)
+## The introduction excercise 
+
+can be found [here](http://htmlpreview.github.io/?https://github.com/data-science-seminar/Seminars/blob/master/Installation%20guide/R/Introduction-excercise.html)
