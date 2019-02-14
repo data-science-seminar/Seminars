@@ -1,1 +1,1 @@
-# Seminar pre  excercise
+# Practical data science
