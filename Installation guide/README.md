@@ -22,4 +22,4 @@ Follow anaconda installation [guide](https://docs.anaconda.com/anaconda/install/
 
 can be found [here](http://htmlpreview.github.io/?https://github.com/data-science-seminar/Seminars/blob/master/Installation%20guide/R/Introduction-excercise.html)
 
-Or if you prefer run  save the data contained in this folder and save this [file] (https://github.com/data-science-seminar/Seminars/blob/master/Installation%20guide/test.Rmd) in R
+Or if you prefer run  save the data contained in this folder and save this [file](https://github.com/data-science-seminar/Seminars/blob/master/Installation%20guide/test.Rmd) in R
