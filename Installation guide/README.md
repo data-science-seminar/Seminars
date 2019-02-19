@@ -27,4 +27,4 @@ Or if you prefer run  save the data contained in this folder and save this [file
 
 ## Further practice
 
-Swirl is a great r package that contains interactive courses, If you want to further practice your R skills or pick up on some basic concept you can try it by following this guide[https://swirlstats.com/students.html]
+Swirl is a great r package that contains interactive courses, If you want to further practice your R skills or pick up on some basic concept you can try it by following this [guide](https://swirlstats.com/students.html)
