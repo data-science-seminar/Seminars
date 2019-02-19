@@ -23,3 +23,8 @@ Follow anaconda installation [guide](https://docs.anaconda.com/anaconda/install/
 can be found [here](http://htmlpreview.github.io/?https://github.com/data-science-seminar/Seminars/blob/master/Installation%20guide/R/Introduction-excercise.html)
 
 Or if you prefer run  save the data contained in this folder and save this [file](https://github.com/data-science-seminar/Seminars/blob/master/Installation%20guide/test.Rmd) in R
+
+
+## Further practice
+
+Swirl is a great r package that contains interactive courses, If you want to further practice your R skills or pick up on some basic concept you can try it by following this guide[https://swirlstats.com/students.html]
