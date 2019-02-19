@@ -9,28 +9,40 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Introduction excercise
 
-The objective of this excercise is to be familiar with data sourcing and basic data manipulation for both R and python. After this excercise you should be able to load files, create data frames and understand basic data transformation. If you are already familiar with data manipulation you might be able to skip this excercise.õ
+The objective of this excercise is to be familiar with data sourcing and basic data manipulation for both R and python. After this excercise you should be able to load files, create data frames and understand basic data transformation. If you are already familiar with data manipulation you might want to skip this excercise.
 
 
 ### Packages & libraries
 
 In R Packages are the fundamental units of reproducible code. They include reusable R functions, the documentation that describes how to use them, and sample data. Packages enhance R by improving existing base R functionalities, or by adding new ones. There are general packages like dplyr and data.table that help with data cleaning and wrangling to more advatages pages such as "NLP", that allow text processing for several languges
 
+Installing packages can be done with the following command
+```{r eval=FALSE}
+install.packages("data.table")
+
+```
+"data.table" is the name of the package that we are installing onto R, this will allow us to have access to new functions that are not present in base R such as, subset, group, etc.
+
+In order to attach this packages to our current R session we can use two commands
+
+```{r eval=FALSE}
+library(data.table)
+require(data.table)
+
+```
+Both commands when used in R will give you access to the functions contained inside the package, the only difference is that library() will producean error if the package is not installed, and require() will only give a warninig.
+
+For, example if we want to run python code in R we can use the package "reticulate"
 
 ```{r  message = FALSE, eval=TRUE}
-# install.packages("data.table")
-# install.packages("dplyr")
-# install.package("NLP")
+#install.packages("reticulate")
+library(reticulate)
 
-require(data.table)
-require(dplyr)
-require(NLP)
-require(reticulate)
 #knitr::knit_engines$set(python = reticulate::use_python('C:/tools/anaconda3/5.3.0'))
 
 ```
+In this case we first install the package and then attach it to our session with the library() command this will allow us to run the following code, which would have been impossible in base R.(Note: since reticulate was already installed in my machine I used "#" to comment this code so it does not run and reinstall the package)
 
-In python packages can be installed wiht pip or using Anaconda in the command prompt
 
 ```{python eval=FALSE}
 #pip install numpy
@@ -42,6 +54,8 @@ print(print(sys.version))
 
 
 ```
+* In python packages can be installed wiht pip or using Anaconda in the command prompt
+
 ### Data sourcing
 
 The most importan part of a data scientist job is the data. Logically, this means that the first step into learning about data science is not on statistics on comple mathematics but understanding how obtain data from different sources.
