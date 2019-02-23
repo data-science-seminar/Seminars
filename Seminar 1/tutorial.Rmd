@@ -1,0 +1,109 @@
+---
+title: "Tutorial 1"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Data sourcing
+
+#### Consideration working with files
+* Input
+    + Speed (fast enough)
+    + External dependencies
+    + Consistent function names and arguments
+    + Avoid spces or dots on column names (use underscores)
+* Output
+    + Now row names
+    + Retain dates
+    + Do not change column names
+
+**Don't let R turn characters in to Factors**
+
+### Working with Databases
+
+```{r eval=FALSE}
+library(DBI)
+
+path <- system.file("db", "datasets.sqlite", package = "RSQLite")
+db <- dbConnect(RSQLite::SQLite(), path)
+
+dbListTables(db)
+str(dbGetQuery(db, "SELECT * FROM mtcars"))
+
+# Polite to disconnect from db when done
+dbDisconnect(db)
+```
+
+### Working with Webdata
+
+```{r}
+              # Import from JSON
+library(jsonlite)
+json <- fromJSON("data/Water_Right_Applications.json")
+json[[1]][[1]]
+
+# Import from XML
+library(xml2)
+xml <- read_xml("data/Water_Right_Applications.xml")
+xml_children(xml_children(xml))
+
+# Import from HTML
+library(rvest)
+html <- read_html("https://en.wikipedia.org/wiki/List_of_countries_and_dependencies_by_population")
+table <- xml_find_one(html, "//table")
+View(html_table(table))
+```
+
+
+```{r eval=FALSE}
+
+library(rvest)
+
+# Always start by opening in web browser and experimenting with
+# selectorgadget: http://selectorgadget.cm
+
+url <- "http://www.tripadvisor.com/Hotel_Review-g37209-d1762915-Reviews-JW_Marriott_Indianapolis-Indianapolis_Indiana.html"
+httr::BROWSE(url)
+
+reviews <- url %>%
+  read_html() %>%
+  html_nodes("#REVIEWS .innerBubble")
+
+length(reviews)
+xml_structure(reviews[[1]])
+
+# Most important distinction to get the hang of is html_nodes() vs html_node().
+# html_nodes() returns m nodes; html_node() always returns n nodes. This is
+# important to make sure that the variables line up correctly.
+
+id <- reviews %>%
+  html_node(".quote a") %>%
+  html_attr("id")
+
+quote <- reviews %>%
+  html_node(".quote span") %>%
+  html_text()
+
+rating <- reviews %>%
+  html_node(".rating .rating_s_fill") %>%
+  html_attr("alt") %>%
+  gsub(" of 5 stars", "", .) %>%
+  as.integer()
+
+date <- reviews %>%
+  html_node(".rating .ratingDate") %>%
+  html_attr("title") %>%
+  strptime("%b %d, %Y") %>%
+  as.POSIXct()
+
+review <- reviews %>%
+  html_node(".entry .partial_entry") %>%
+  html_text()
+
+library(dplyr)
+data_frame(id, quote, rating, date, review) %>% View()
+```
