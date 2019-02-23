@@ -1,0 +1,98 @@
+---
+title: "Tabular data classification"
+output: html_notebook
+---
+
+## Getting data
+A classification task requires two things a label and the observation corresponding to that label, In this case we will use a dataset with description of different mushrooms, and we will try to classify if they are edible or poisonus
+
+
+```{r}
+library(tidyverse)
+mushrooms<-read.csv('mushrooms.csv')
+head(mushrooms)
+```
+```{r}
+summary(mushrooms)
+```
+
+It seems like we dont have any obvious data quality issues, let's take a closer look at our label variable
+which is the class column, its distributions is as follows
+
+```{r}
+table(mushrooms$class)
+```
+
+In this case the data labels are very well balanced so random forest is ideal for this kind of data, but before classifying let's further explore
+
+```{r}
+library(ggplot2)
+
+p = ggplot(mushrooms,aes(x=odor,  
+                    y=spore.print.color, 
+                    color=class))
+
+p + geom_jitter(alpha=0.3) +  
+  scale_color_manual(breaks = c('e','p'),
+                     values=c('darkgreen','red'))
+
+```
+In this case:
+odor (almond=a,anise=l,creosote=c,fishy=y,foul=f,musty=m,none=n,pungent=p,spicy=s)
+spore-print-color(black=k,brown=n,buff=b,chocolate=h,green=r,orange=o,purple=u,white=w,yellow=y)
+
+Data seems like there is enough difference between the observersion of edible mushrooms and poisonus, let's prepare the data for classification
+```{r}
+library(randomForest)
+library(caret)
+library(caTools)
+
+set.seed(2012)
+mushrooms<-mushrooms[sample(nrow(spam)),]
+
+set.seed(123)   
+samplem <- sample.split(mushrooms$class,SplitRatio = 0.75) 
+mush.train <-subset(mushrooms,samplem ==TRUE) 
+mush.test<-subset(mushrooms, samplem ==FALSE)
+
+
+
+```
+
+Let's look at the class balance for the training set
+
+```{r}
+table(mush.train$class)/nrow(mush.train)  
+```
+And now for the original dataset
+
+```{r}
+table(mushrooms$class)/nrow(mushrooms)  
+```
+
+So this function split help us keep the same balance for training and testing as in our original dataset
+
+```{r}
+rf = randomForest(class ~ .,  
+                   ntree = 100,
+                   data = mush.train)
+plot(rf)  
+```
+
+Now let's check what are the more important variables
+
+```{r}
+varImpPlot(rf,  
+           sort = T,
+           n.var=10,
+           main="Top 10 - Variable Importance")
+```
+
+Now lets evaluate our model
+
+```{r}
+mpred<-predict(rf ,mush.test)
+confusionMatrix(table(predicted=mpred,actual=mush.test$class), mode = "everything")
+
+```
+

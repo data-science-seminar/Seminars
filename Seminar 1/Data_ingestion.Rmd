@@ -1,0 +1,157 @@
+---
+title: "Data Ingestion"
+output: html_notebook
+---
+
+---
+title: "Tutorial 1"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Data ingestion
+
+#### Consideration working with files
+* Input
+    + Speed (fast enough)
+    + External dependencies
+    + Consistent function names and arguments
+    + Avoid spces or dots on column names (use underscores)
+* Output
+    + Now row names
+    + Retain dates
+    + Do not change column names
+
+**Don't let R turn characters in to Factors**
+
+### Load libraries
+
+```{r eval=TRUE}
+
+library(DBI)
+library(jsonlite)
+library(data.tree)
+library(xml2)
+library(data.table)
+library(RSQLite)
+library(tidyverse)
+
+```
+
+
+### Working with Databases
+
+```{r eval=TRUE,message = FALSE}
+# Connect to SQLite
+db <- dbConnect(RSQLite::SQLite(), dbname = "database.sqlite")
+
+# Import data from SQLite
+dftable<-as.data.frame(dbListTables(db))
+dfdatabase<-dbGetQuery(db, "SELECT * FROM packages")
+
+dfdatabase
+
+# Polite to disconnect from db when done
+dbDisconnect(db)
+
+
+```
+`
+
+### Working with Webdata
+
+JSON (JavaScript Object Notation) is text format that is easy for machines to generate and parse
+
+```{r eval=FALSE}
+             
+library(data.tree)
+library(jsonlite)
+library(magrittr)
+reposLoL <- fromJSON("https://api.github.com/users/hadley/repos", simplifyDataFrame = FALSE)
+
+library(data.tree)
+repos <- as.Node(reposLoL)
+print(repos, "id", "login")
+
+#convert this to a data.frame
+reposdf <- repos %>% ToDataFrameTable(ownerId = "id", 
+                                  "login", 
+                                  repoName = function(x) x$parent$name, #relative to the leaf
+                                  fullName = "full_name", #unambiguous values are inherited from ancestors
+                                  repoId = function(x) x$parent$id,
+                                  "fork", 
+                                  "type")
+head(reposdf)
+```
+
+To scrapt data directly from a webpage we can use the  rvest library
+
+```{r}
+# Import from HTML
+library(rvest)
+html <- read_html("https://en.wikipedia.org/wiki/List_of_countries_and_dependencies_by_population")
+table <- xml_find_one(html, "//table")
+head(html_table(table))
+```
+
+If you want other element of a webpage you have to look through the css code of that page and indicate what you want from there
+```{r}
+
+lego_movie <- read_html("http://www.imdb.com/title/tt1490017/")
+
+#Scrape the website for the movie rating
+
+title<- html_nodes(lego_movie, 'title')[1]%>%html_text()
+rating <- lego_movie %>% 
+  html_nodes("strong span") %>%
+  html_text() %>%
+  as.numeric()
+
+poster<-html_nodes(lego_movie, 'img')[5]%>%html_attr('src')
+
+
+
+
+
+```
+Now let's do the same for several pages first, let's write a function to scrap the elements we want
+
+
+```{r}
+
+
+imdbfunc<-function(movi){
+  
+  mov <- read_html(movi)
+  title<- html_nodes(mov, 'h1')%>%html_text()
+  rating <- mov %>% 
+  html_nodes("strong span") %>%
+  html_text() %>%
+  as.numeric()
+
+poster<-html_nodes(mov, 'img')[5]%>%html_attr('src')
+
+movie<-data.frame(title,rating,poster)
+  
+}
+
+mov_list<-c('https://www.imdb.com/title/tt2386490/?ref_=inth_ov_tt',
+           'https://www.imdb.com/title/tt6513120/?ref_=inth_ov_tt',
+           'https://www.imdb.com/title/tt3513498/?ref_=inth_ov_tt')
+
+movies<-movie
+
+for(i in 1:length(mov_list)){
+  
+ 
+  movie<- imdbfunc(mov_list[i])
+  movies<-rbind(movies,movie)
+
+}
+movies
+
+```

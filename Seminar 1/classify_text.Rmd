@@ -1,0 +1,116 @@
+---
+title: "Text classification with Naive Bayes"
+output: html_notebook
+---
+
+
+## Getting data
+For classification we need two things the label the observation or cases to classify and the label for which we want as classification
+```{r}
+library(tidyverse)
+
+spam<-read.csv("spam.csv",header=FALSE, sep=" ", quote='\"\"', stringsAsFactors=FALSE,skip = 1)
+spam<-spam%>%separate(V1,c('type','Message'))
+spam<-spam%>%unite(Message,2:29,sep = '')
+
+spam
+```
+
+Let's have a closer look at our labels
+```{r}
+as.data.frame(table(spam$type)) %>% arrange(desc(Freq))
+```
+
+
+```{r}
+spam<-read_delim('spam2.csv',col_names = FALSE,delim = ',',skip = 1)
+spam<-spam%>%unite(Message,2:5)
+spam$Message<-gsub("NA", ' ',spam$Message)
+colnames(spam)[1]<-'Type'
+
+table(spam$Type)
+```
+
+## Prepare training and testing set for classification
+Now that we have a the full data set, let start the classification procedure by shuffling the data and spliting it into training and test set
+
+```{r}
+set.seed(2012)
+spam<-spam[sample(nrow(spam)),] #randomly shuffling the dataset
+```
+
+Additionally and a specific step for most nlp tasks is to create a corpus using all the words containing in our dataset
+
+```{r}
+library(quanteda)
+msg.corpus<-corpus(spam$Message)
+docvars(msg.corpus)<-spam$Type  
+```
+
+
+After creating the corpus we can know more about the text we have in our dataset, so lets plot the most common words found under the  label 'spam'
+```{r}
+
+library(RColorBrewer)
+
+spam.plot<-corpus_subset(msg.corpus,docvar1=="spam")
+
+#now creating a document-feature matrix using dfm()
+spam.plot<-dfm(spam.plot, tolower = TRUE, 
+               remove_punct = TRUE, remove_twitter = TRUE, remove_numbers = TRUE, remove=stopwords(source = "smart"))
+
+spam.col <- brewer.pal(10, "BrBG")  
+
+textplot_wordcloud(spam.plot, min.freq = 16, color = spam.col)  
+```
+
+Let's continue with the data preparing the data for classification
+
+
+```{r}
+library(caTools)
+#separating Train and test data
+set.seed(123)   
+sample <- sample.split(spam$Type,SplitRatio = 0.75) 
+spam.train <-subset(spam,sample ==TRUE) # creates a training dataset named train1 with rows which are marked as TRUE
+spam.test<-subset(spam, sample==FALSE)
+
+
+ #Formating and generating document freq matrix
+msg.dfm <- dfm(msg.corpus, tolower = TRUE, remove_twitter = TRUE, remove_punct=TRUE, 
+               remove_numbers = TRUE, remove=stopwords(source = "smart") ) 
+msg.dfm <- dfm_trim(msg.dfm, min_termfreq  = 5, min_docfreq = 3)  
+msg.dfm <- dfm_tfidf(msg.dfm) 
+
+head(msg.dfm)
+
+#training and testing data of dfm 
+msg.dfm.train<-subset(msg.dfm,sample==TRUE)
+msg.dfm.test<-subset(msg.dfm,sample==FALSE)
+```
+
+Now to classify
+
+```{r}
+nb.classifier<-textmodel_nb(msg.dfm.train,spam.train$Type)
+nb.classifier
+```
+
+```{r}
+pred<-predict(nb.classifier,msg.dfm.test)
+
+#generating a confusion matrix
+
+# use pred$nb.predicted to extract the class labels
+table(predicted=pred,actual=spam.test$Type)
+
+```
+
+Evaluate the model
+```{r}
+library(caret)
+
+confusionMatrix(table(predicted=pred,actual=spam.test$Type), mode = "everything")
+```
+
+
