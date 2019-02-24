@@ -13,8 +13,8 @@ Question in the discord channel [Discord](https://discord.gg/tHnkWmu)
 Data ingest excercise [page](http://htmlpreview.github.io/?https://github.com/data-science-seminar/Seminars/blob/master/Seminar%201/Data_ingestion.nb.html)
 [notebook](https://github.com/data-science-seminar/Seminars/blob/master/Seminar%201/Data_ingestion.Rmd)
 
-Data cleaning excercise [page]()
-[notebook]()
+Data cleaning excercise [page](http://htmlpreview.github.io/?https://github.com/data-science-seminar/Seminars/blob/master/Seminar%201/Data_cleaning.nb.html)
+[notebook](https://github.com/data-science-seminar/Seminars/blob/master/Seminar%201/Data_ingestion.Rmd)
 
 Text classification [page](http://htmlpreview.github.io/?https://github.com/data-science-seminar/Seminars/blob/master/Seminar%201/classify_text.nb.html)
 [notebook](https://github.com/data-science-seminar/Seminars/blob/master/Seminar%201/classify_text.Rmd)
