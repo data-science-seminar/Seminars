@@ -11,10 +11,10 @@ Welcome to the first seminar here you will find all the practical info
 Question in the discord channel [Discord](https://discord.gg/tHnkWmu)
 
 Data ingest excercise [page](http://htmlpreview.github.io/?https://github.com/data-science-seminar/Seminars/blob/master/Seminar%201/Data_ingestion.nb.html)
-[notebook](https://github.com/data-science-seminar/Seminars/blob/master/Seminar%201/Data_ingestion.nb)
+[notebook](https://github.com/data-science-seminar/Seminars/blob/master/Seminar%201/Data_ingestion.Rmd)
 
 Text classification [page](http://htmlpreview.github.io/?https://github.com/data-science-seminar/Seminars/blob/master/Seminar%201/classify_text.nb.html)
-[notebook](https://github.com/data-science-seminar/Seminars/blob/master/Seminar%201/classify_text.nb)
+[notebook](https://github.com/data-science-seminar/Seminars/blob/master/Seminar%201/classify_text.Rmd)
 
 Random forest [page](http://htmlpreview.github.io/?https://github.com/data-science-seminar/Seminars/blob/master/Seminar%201/classify_df.nb.html)
-[notebook](https://github.com/data-science-seminar/Seminars/blob/master/Seminar%201/classify_df.nb)
+[notebook](https://github.com/data-science-seminar/Seminars/blob/master/Seminar%201/classify_df.Rmd)
