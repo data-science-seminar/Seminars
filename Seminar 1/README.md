@@ -21,3 +21,19 @@ Text classification [page](http://htmlpreview.github.io/?https://github.com/data
 
 Random forest [page](http://htmlpreview.github.io/?https://github.com/data-science-seminar/Seminars/blob/master/Seminar%201/classify_df.nb.html)
 [notebook](https://github.com/data-science-seminar/Seminars/blob/master/Seminar%201/classify_df.Rmd)
+
+## Please install the following packages before the session
+
+install.packages("readr")
+install.packages("readxl")
+install.packages("haven")
+install.packages("data.tree")
+install.packages("xml2")
+install.packages("rvest")
+install.packages("jsonlite")
+install.packages("dbi")
+install.packages("quanteda")
+install.packages("tidyverse",dependencies = TRUE)
+install.packages("lubridate")
+install.packages("caret",dependencies = TRUE)
+install.packages("caTools")
