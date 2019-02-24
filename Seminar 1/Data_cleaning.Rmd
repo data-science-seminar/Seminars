@@ -1,0 +1,87 @@
+---
+title: "Data cleaning"
+output: html_notebook
+---
+
+## Data quality
+
+```{r}
+data<-read.csv('Water_Right_Applications.csv',stringsAsFactors = FALSE)
+head(data)
+```
+
+This dataset has several issues, however opening individual files or databases is quite time consuming, so let's create a function to summarise different aspects of the datasets
+
+```{r}
+dfsummary<-function(df){
+ 
+  summary=data.frame()
+  for(i in 1:ncol(df)){
+    
+    if(length(df[!(is.na(df[,i])),i])==0){
+      
+      temp=data.frame(counts=0,
+                      uniques=0,
+                      missing=nrow(df[(is.na(df[,i])),i]),
+                      miss_per=(1),
+                      percent_mfv=(0)) 
+      
+      
+    }else{
+      
+      temp=data.frame(counts=length(df[!(is.na(df[,i])),i]),
+                      uniques=uniqueN(df[,i]),
+                      missing=length(df[(is.na(df[,i])),i]),
+                      data_type=class(data[,i]),
+                      no_space=length(data[data[,i]==' ',i]))
+      
+    }
+    
+    
+    rownames(temp)<-colnames(df)[i]
+    
+    summary<-rbind(summary,temp)
+    
+    #print(i)
+  }
+  
+  return(summary)
+  
+}
+
+data_summary<-dfsummary(data)
+
+data_summary
+```
+
+Let's try to fix the most obvious errors first let's drop unecessary data
+
+```{r}
+data<-data[,-25]
+colnames(data)
+```
+
+Next we want to fix dates in a format that is sortable
+
+```{r}
+library(tidyverse)
+library(lubridate)
+
+data$date <- mdy(data$PRIORITY_DATE)
+data$weekday <- wday(data$date,label = TRUE,locale = 'English')
+
+data %>% filter(weekday=='Wed') %>% head()
+```
+
+What to do with empty spaces and empaty values is up to the application. However is a good to change all  data with empty ispaces into empty values
+```{r}
+print(nrow(data[is.na(data[,19]),]))
+print(nrow(data[(data[,19]==' '),]))
+
+data[(data[,19]==' '),19]<-NA
+print(nrow(data[is.na(data[,19]),]))
+```
+
+
+
+
